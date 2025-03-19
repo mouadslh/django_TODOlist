@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des tâches</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Ma Todo List</h1>
+    
+    <!-- Formulaire pour ajouter une tâche -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Ajouter</button>
+    </form>
+    
+    <!-- Liste des tâches -->
+    <ul>
+    {% for task in tasks %}
+        <li>
+            {% if task.completed %}
+                <strike>{{ task.title }}</strike>
+            {% else %}
+                {{ task.title }}
+            {% endif %}
+            <div>
+                {% if not task.completed %}
+                    <a href="{% url 'complete_task' task.id %}">Terminer</a>
+                {% endif %}
+                <a href="{% url 'delete_task' task.id %}">Supprimer</a>
+            </div>
+        </li>
+    {% empty %}
+        <li></li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
